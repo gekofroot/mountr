@@ -40,14 +40,14 @@ mountdev() {
 	$pad_2
 }
 
-unmount device
+# unmount device
 unmountdev() {
 	read -p "unmount /mnt/ " dir
 	sudo umount /mnt/$dir
 	$pad_2
 }
 
-seams() {
+main() {
 	clear
 	$pad
 	PS3=" "
@@ -104,4 +104,4 @@ seams() {
 	done
 }
 
-seams
+main

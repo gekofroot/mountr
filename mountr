@@ -1,0 +1,107 @@
+#!/bin/bash
+
+# mount/unmount storage devices
+# GNU Affero General Public License v3.0
+
+
+pad='echo -e \n'
+pad_2='echo -e \n\n'
+
+# display options
+lsch() {
+	$pad
+	for choice in "${choices[@]}"; do
+	case $choice in
+		"exit")
+			echo 1\) $choice
+			;;
+		"fdisk -l")
+			echo 2\) $choice
+			;;
+		"lsblk -f")
+			echo 3\) $choice
+			;;
+		"mount")
+			echo 4\) $choice
+			;; 
+		"umount")
+			echo 5\) $choice
+			;;
+	esac
+done
+$pad
+}
+
+# mount device
+mountdev() {
+	read -p "mounting /dev/ " dev
+	read -p "mount point /mnt/ " dir
+	sudo mount /dev/$dev /mnt/$dir
+	$pad_2
+}
+
+unmount device
+unmountdev() {
+	read -p "unmount /mnt/ " dir
+	sudo umount /mnt/$dir
+	$pad_2
+}
+
+seams() {
+	clear
+	$pad
+	PS3=" "
+	choices=("exit" "fdisk -l" "lsblk -f" "mount" "umount")
+	select choice in "${choices[@]}"; do
+		case $choice in
+			"exit")
+				clear
+				$pad
+				exit
+				;;
+			"fdisk -l")
+				clear
+				$pad
+				lsch
+				echo -e "selection: $REPLY \nlisting partition tables: " 
+				$pad
+				sudo fdisk -l
+				$pad_2
+				;;
+			"lsblk -f")
+				clear
+				$pad
+				lsch
+				echo  -e "selection: $REPLY \nfilesystem info output: " 
+				$pad
+				lsblk -f
+				$pad_2
+				;;
+			"mount")
+				clear
+				$pad
+				lsch
+				echo -e "selection: $REPLY \nmounting device... " 
+				$pad
+				mountdev
+				;;
+			"umount")
+				clear
+				$pad
+				lsch
+				echo -e "selection: $REPLY \nunmounting device... " 
+				$pad
+				unmountdev
+				;;
+		        *)
+				clear
+				lsch
+			        echo "selection: $REPLY"
+			        echo "please select an available option"
+			        $pad_2
+				;;
+		esac
+	done
+}
+
+seams
